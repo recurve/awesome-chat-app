@@ -2,3 +2,15 @@ body {
   padding: 10px;
   font-family: sans-serif;
 }
+
+#chat-message {
+  width: 500px;
+  height: 50px;
+}
+
+#messages {
+  width: 700px;
+  height: 300px;
+  border: 1px solid rgb(230, 230, 230);
+  margin: 0px 0px 10px 0px;
+}

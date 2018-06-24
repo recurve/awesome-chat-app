@@ -2,21 +2,30 @@ import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
 
 import './main.html';
+import '/lib/namespace.js';
 
-Template.hello.onCreated(function helloOnCreated() {
-  // counter starts at 0
-  this.counter = new ReactiveVar(0);
+// assign collection to the `messages` helper in `chatBox` template
+Template.chatBox.helpers({
+  "messages": function() {
+    return chatCollection.find();
+  }
 });
 
-Template.hello.helpers({
-  counter() {
-    return Template.instance().counter.get();
-  },
+// generate a value for the `user` helper in `chatMessage` template
+Template.chatMessage.helpers({
+  "user": function() {
+    return this.userId;
+  }
 });
 
-Template.hello.events({
-  'click button'(event, instance) {
-    // increment the counter when button is clicked
-    instance.counter.set(instance.counter.get() + 1);
-  },
+// when `Send Chat` clicked, add the typed chat message into the collection
+Template.chatBox.events({
+  "click #send": function() {
+    var message = $('#chat-message').val();
+    chatCollection.insert({
+      userId: 'me',
+      message: message
+    });
+    $('#chat-message').val('');
+  }
 });
