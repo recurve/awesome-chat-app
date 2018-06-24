@@ -14,7 +14,8 @@ Template.chatBox.helpers({
 // generate a value for the `user` helper in `chatMessage` template
 Template.chatMessage.helpers({
   "user": function() {
-    return this.userId;
+    var nickname = (this.userId)? 'user-' + this.userId : 'anonymous-' + this.subscriptionId;
+    return nickname;
   }
 });
 
@@ -27,5 +28,16 @@ Template.chatBox.events({
       message: message
     });
     $('#chat-message').val('');
+
+    //add the message to the stream
+    chatStream.emit('chat', message);
   }
+});
+
+chatStream.on('chat', function(message) {
+  chatCollection.insert({
+    userId: this.userId, //this is the userId of the sender
+    subscriptionId: this.subscriptionId, //this is the subscriptionId of the sender
+    message: message
+  });
 });
