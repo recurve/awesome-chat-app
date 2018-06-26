@@ -4,6 +4,8 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import './main.html';
 import '/lib/namespace.js';
 
+var badWordsFilter = require('swearjar');
+
 // assign collection to the `messages` helper in `chatBox` template
 Template.chatBox.helpers({
   "messages": function() {
@@ -23,6 +25,7 @@ Template.chatMessage.helpers({
 Template.chatBox.events({
   "click #send": function() {
     var message = $('#chat-message').val();
+    message = badWordsFilter.censor(message);
     chatCollection.insert({
       userId: 'me',
       message: message
